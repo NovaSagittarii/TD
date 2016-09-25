@@ -121,7 +121,27 @@ void draw(){
       text("Build", width - 125, height - 25);
       translate(game.buyX, 0);
       for(int i = 0; i < 12; i ++){
-        text("js", i * 100, height+25);
+        fill(255);
+        switch(i){
+          case 0:
+            textSize(15);
+            text("Basic Turret", i * 100, height + 80);
+          break;
+          case 1:
+            textSize(15);
+            text("Laser Turret", i * 100, height + 80);
+          break;
+          case 2:
+            textSize(15);
+            text("Twin Turret", i * 100, height + 80);
+          break;
+        }
+        if(abs(mouseX - i * 100 + game.buyX) < 40 && mouseY > (height - 100)){
+          fill(255, 50);
+          stroke(255, 100);
+          strokeWeight(10);
+          rect(i * 100, height + 50, 80, 80);
+        }
       }
       game.buyX += game.buyXs;
       game.buyXs /= 1.05;
@@ -134,7 +154,7 @@ void draw(){
         game.buyXs /= 2;
       }
       if(game.buyY2 == 100 && mouseY > (height - 100) && mousePressed){
-        game.buyXs += (pmouseX - mouseX) / 5;
+        game.buyXs += (pmouseX - mouseX) / -5;
       }
     break;
   }
