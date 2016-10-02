@@ -6,7 +6,8 @@ Development Build 1 - Setup variables.
 Development Build 2 - Basic level layout.
 Development Build 3 - Enemy movement.
 Development Build 4 - Dragging movement with enlarged map.
--todo Development Build 5 - Build Shop and Turrets
+Development Build 5 - Build Shop and Turrets
+-todo Development Build 6 - Firing Mechanism, Economy
 
 Music Credits stuffs (based on \Data folder)
 

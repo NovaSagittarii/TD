@@ -6,7 +6,7 @@ PREF pref = new PREF();
 
 class GAME {
   int state = 0, buyY2 = 0;
-  float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 0, buyXs = 0, buyY = 0;
+  float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 0, buyXs = 0, buyY = 0, buySel = -1;
   int layout[][] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},

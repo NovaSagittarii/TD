@@ -15,6 +15,8 @@ void setup() {
   size(700, 400);
   //fullScreen();
   surface.setResizable(true);
+  surface.setTitle("Work-In-Progress TD");
+  surface.setIcon(loadImage("icon.png"));
   textFont(loadFont("Ubuntu-48.vlw"), 48);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
@@ -107,6 +109,7 @@ void draw(){
       }
       game.buyY -= (game.buyY - game.buyY2) / 7;
       stroke(255);
+      strokeWeight(2);
       beginShape();
       vertex(width, height);
       vertex(width, height-50);
@@ -120,27 +123,25 @@ void draw(){
       textSize(45);
       text("Build", width - 125, height - 25);
       translate(game.buyX, 0);
-      for(int i = 0; i < 12; i ++){
+      for(int i = 0; i < 3; i ++){//12 turrets needed
         fill(255);
-        switch(i){
-          case 0:
-            textSize(15);
-            text("Basic Turret", i * 100, height + 80);
-          break;
-          case 1:
-            textSize(15);
-            text("Laser Turret", i * 100, height + 80);
-          break;
-          case 2:
-            textSize(15);
-            text("Twin Turret", i * 100, height + 80);
-          break;
-        }
-        if(abs(mouseX - i * 100 + game.buyX) < 40 && mouseY > (height - 100)){
+        textSize(data.tower.txtSize[i]);
+        text(data.tower.name[i], i * 100, height + 80);
+        if(abs(mouseX - i * 100 - game.buyX) < 40 && mouseY > (height - 100) || game.buySel == i){
           fill(255, 50);
-          stroke(255, 100);
+          stroke(255, 50);
+          if(game.buySel == i){
+            stroke(255, 100);
+          }
           strokeWeight(10);
           rect(i * 100, height + 50, 80, 80);
+          if(mp && abs(mouseX - i * 100 - game.buyX) < 40 && mouseY > (height - 100)){
+            if(game.buySel == i){
+              game.buySel = -1;
+            }else{
+              game.buySel = i;
+            }
+          }
         }
       }
       game.buyX += game.buyXs;
