@@ -16,7 +16,7 @@ void setup() {
   //fullScreen();
   surface.setResizable(true);
   surface.setTitle("Work-In-Progress TD");
-  surface.setIcon(loadImage("icon.png"));
+  //surface.setIcon(loadImage("icon.png"));
   textFont(loadFont("Ubuntu-48.vlw"), 48);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
