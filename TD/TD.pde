@@ -102,7 +102,7 @@ void draw(){
           translate(i * 50, j * 50);
           noFill();
           stroke(255, 100);
-          ellipse(25, 25, (noise(i*3, j*6) * 42 + frameCount) % data.tower.stats.range[TowerID], (noise(i*3, j*6) * 42 + frameCount) % data.tower.stats.range[TowerID]);
+          ellipse(25, 25, (i * 4 + j * 10 + frameCount) % data.tower.stats.range[TowerID], (i * 4 + j * 10 + frameCount) % data.tower.stats.range[TowerID]);
           fill(255);
           //image(data.tower.baseP[TowerID], 25, 25);
           ellipse(25, 25, 30, 30);
