@@ -7,7 +7,8 @@ Development Build 2 - Basic level layout.
 Development Build 3 - Enemy movement.
 Development Build 4 - Dragging movement with enlarged map.
 Development Build 5 - Build Shop and Turrets
--todo Development Build 6 - Firing Mechanism, Economy
+Development Build 6 - Firing Mechanism
+-todo Development Build 7 - Economy, Hitboxes
 
 Music Credits stuffs (based on \Data folder)
 

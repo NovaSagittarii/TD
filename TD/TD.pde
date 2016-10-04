@@ -11,6 +11,7 @@ void setup() {
   game.state = 5;
   game.enemies = new ArrayList<Enemy>();
   game.notifs = new ArrayList<Notif>();
+  game.bullets = new ArrayList<Bullet>();
   game.enemies.add(new Enemy(-25, 75, "basic"));
   size(700, 400);
   //fullScreen();
@@ -48,16 +49,6 @@ void draw(){
       noStroke();
       translate(game.camX, game.camY);
       background(0);
-      fill(255);
-      for(int i = 0; i < game.layout[0].length; i ++){
-        for(int j = 0; j < game.layout.length; j ++){
-          //switch(game.l
-          if(game.layout[j][i] > 0){
-            continue;
-          }
-          //Nrect(i*50 + 25, j*50 + 25, 35, 35, 8, 3, color(255, 255, 0), 2);
-        }
-      }
       int xloc = 25;
       int yloc = 75;
       for(int i = 1; i < game.levelPath.length; i ++){
@@ -76,6 +67,52 @@ void draw(){
           case "D":
             yloc += 50;
           break;
+        }
+      }
+      fill(255);
+      for(int i = game.bullets.size() - 1; i >= 0; i --){
+        Bullet bullet = game.bullets.get(i);
+        fill(150);
+        ellipse(bullet.x, bullet.y, 10, 10);
+        bullet.x += cos(bullet.a) * bullet.v;
+        bullet.y += sin(bullet.a) * bullet.v;
+      }
+      for(int i = 0; i < game.layout[0].length; i ++){
+        for(int j = 0; j < game.layout.length; j ++){
+          switch(game.layout[j][i]){
+            case 0: /*Empty Space*/ break;
+            case 1: /*Enemy Path*/ break;
+            case 2: /*Enemy Path [2]*/ break;
+            case 3: /*Enemy Path [3]*/ break;
+            case 4: /*Enemy Path [4]*/ break;
+          }
+          if(game.layout[j][i] < 5){
+            continue;
+          }
+          pushMatrix();
+          int TowerID = (game.layout[j][i] - 5);
+          float TowerR = 0;
+          for(int k = 0; k < game.enemies.size(); k ++){
+            Enemy enemy = game.enemies.get(k);
+            if(dist(enemy.x, enemy.y, i * 50 + 25, j * 50 + 25) > (data.tower.stats.range[TowerID] / 2)){
+              continue;
+            }
+            TowerR = atan2(enemy.y - (j * 50 + 12.5), enemy.x - (i * 50 + 12.5));
+          }
+          translate(i * 50, j * 50);
+          noFill();
+          stroke(255, 100);
+          ellipse(25, 25, (noise(i*3, j*6) * 42 + frameCount) % data.tower.stats.range[TowerID], (noise(i*3, j*6) * 42 + frameCount) % data.tower.stats.range[TowerID]);
+          fill(255);
+          //image(data.tower.baseP[TowerID], 25, 25);
+          ellipse(25, 25, 30, 30);
+          translate(25, 25);
+          rotate(TowerR + PI/2);
+          rect(0, -10, 10, 25);
+          popMatrix();
+          if((round(noise(i*3, j*6) * 69 + frameCount) % data.tower.stats.reload[TowerID]) == 0 && TowerR != 0){
+            game.bullets.add(new Bullet(i * 50 + 25, j * 50 + 25, TowerR, 7, 2, false, false));
+          }
         }
       }
       for(int i = game.enemies.size() - 1; i >= 0; i --){
