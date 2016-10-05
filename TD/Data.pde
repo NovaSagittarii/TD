@@ -43,7 +43,7 @@ class STAT {
 }
 class Enemy {
   int maxhp, maxsh, value, def, progress, progress2;
-  float x, y, hp, sh, sp; //hp- hitpoints, sh-sheild, sp-speed
+  float x, y, hp, sh, sp, HB; //hp- hitpoints, sh-sheild, sp-speed, HB- hitbox
   String type;
   Enemy(float tx, float ty, String ttype){
     progress = 0;
@@ -55,16 +55,17 @@ class Enemy {
     type = ttype;
     switch(type){
       case "basic":
-        maxhp = 10;
+        maxhp = 100;
         value = 1;
         sp = 2;
+        HB = 14;
       break;
     }
     hp = maxhp;
     sh = maxsh;
   }
   boolean dead() {
-    if(hp < 0){
+    if(hp <= 0){
       game.stat.kills ++;
       return true;
     }else{
@@ -104,13 +105,21 @@ class Enemy {
       }
     }
   }
+  void checkCollision(){
+    for(int m = 0; m < game.bullets.size(); m ++){
+      Bullet bullet = game.bullets.get(m);
+      if(dist(bullet.x, bullet.y, x, y) < HB){
+        hp -= bullet.dmg;
+        game.bullets.remove(m);
+      }
+    }
+  }
 }
 class Bullet {
-  float x, y, a, v; //[a]ngle, [v]elocity
-  int dmg; //Damage
+  float x, y, a, v, dmg; //[a]ngle, [v]elocity
   boolean AoE;
   boolean DoT;
-  Bullet(float tx, float ty, float ta, float tv, int tdmg, boolean tAoE, boolean tDoT){
+  Bullet(float tx, float ty, float ta, float tv, float tdmg, boolean tAoE, boolean tDoT){
     x = tx;
     y = ty;
     a = ta;

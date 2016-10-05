@@ -33,3 +33,31 @@ void Nrect(float x, float y, float w, float h, int size, float intensity, int co
   strokeWeight(thickness);
   rect(x, y, w, h);
 }
+int wave = 0;  //Which wave. []
+int waveP = 0; //Which part of the wave. [][]
+int waveP2 = 0;//Progress of wave chunk [][][2]
+int delay = 0;
+void doWaves(){
+  if(millis() > delay && wave < data.waves.length){
+    if(waveP == 0){
+      //Add on delay
+      delay += parseInt(data.waves[wave][0][0]); //<>//
+      waveP = 1;
+    }else{
+      if(waveP2 >= parseInt(data.waves[wave][waveP][1])){
+        waveP ++;
+        if(waveP >= data.waves[wave].length){
+          wave ++;
+          waveP = 0;
+          waveP2 = 0;
+        }
+      }
+      if(wave >= data.waves.length){
+        return;
+      }
+      game.enemies.add(new Enemy(data.startPosX, data.startPosY, data.waves[wave][waveP][0]));
+      waveP2 ++;
+      delay += parseInt(data.waves[wave][waveP][2]);
+    }
+  }
+}

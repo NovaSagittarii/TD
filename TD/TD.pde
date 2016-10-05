@@ -12,7 +12,6 @@ void setup() {
   game.enemies = new ArrayList<Enemy>();
   game.notifs = new ArrayList<Notif>();
   game.bullets = new ArrayList<Bullet>();
-  game.enemies.add(new Enemy(-25, 75, "basic"));
   size(700, 400);
   //fullScreen();
   surface.setResizable(true);
@@ -42,6 +41,7 @@ void draw(){
     break;
     case 5:
       /** GAMEPLAY */
+      doWaves();
       game.camX += game.camXs;
       game.camY += game.camYs;
       game.camXs /= 1.2;
@@ -77,6 +77,7 @@ void draw(){
         bullet.x += cos(bullet.a) * bullet.v;
         bullet.y += sin(bullet.a) * bullet.v;
       }
+      strokeWeight(2);
       for(int i = 0; i < game.layout[0].length; i ++){
         for(int j = 0; j < game.layout.length; j ++){
           switch(game.layout[j][i]){
@@ -111,13 +112,14 @@ void draw(){
           rect(0, -10, 10, 25);
           popMatrix();
           if((round(noise(i*3, j*6) * 69 + frameCount) % data.tower.stats.reload[TowerID]) == 0 && TowerR != 0){
-            game.bullets.add(new Bullet(i * 50 + 25, j * 50 + 25, TowerR, 7, 2, false, false));
+            game.bullets.add(new Bullet(i * 50 + 25, j * 50 + 25, TowerR, 7, data.tower.stats.damage[TowerID], false, false));
           }
         }
       }
       for(int i = game.enemies.size() - 1; i >= 0; i --){
         Enemy enemy = game.enemies.get(i);
         enemy.display();
+        enemy.checkCollision();
         if(enemy.dead()){
           game.enemies.remove(i);
         }
