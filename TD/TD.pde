@@ -21,7 +21,10 @@ void setup() {
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
   imageMode(CENTER);
-} void keyPressed(){track1.loop();}
+}
+void keyPressed(){
+  track1.loop();
+}
 void draw(){
   switch(game.state){
     case 0:
