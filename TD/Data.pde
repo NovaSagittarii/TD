@@ -32,7 +32,8 @@ class GAME {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
   };
-  String levelPath[] = "RRRDDDRRDDDRUUUURRRRDDRDDDDDDDDDLLLLLLDDDRRRRRRRRRRRRRR".split("");
+  //Use || to signal end.
+  String levelPath[] = "RRRDDDRRDDDRUUUURRRRDDRDDDDDDDDDLLLLLLDDDRRRRRRRRRRRRRRRR||".split("");
   ArrayList<Enemy> enemies;
   ArrayList<Notif> notifs;
   ArrayList<Bullet> bullets;
@@ -42,12 +43,11 @@ class STAT {
   int kills = 0;
 }
 class Enemy {
-  int maxhp, maxsh, value, def, progress, distLeft, distTraveled;
+  int maxhp, maxsh, value, def, progress, distLeft, distTraveled, chunkSize = 50;
   float x, y, hp, sh, sp, HB; //hp- hitpoints, sh-sheild, sp-speed, HB- hitbox
-  String type;
+  String type, dir = game.levelPath[0];
   Enemy(float tx, float ty, String ttype){
     progress = 0;
-    distLeft = 50;
     distTraveled = 0;
     maxsh = 0;
     def = 0;
@@ -74,6 +74,7 @@ class Enemy {
         value = 10;
         sp = 1.5;
         HB = 17;
+        chunkSize = 65;
       break;
       case "basic9":
         maxhp = 2500;
@@ -85,6 +86,7 @@ class Enemy {
     }
     hp = maxhp;
     sh = maxsh;
+    distLeft = chunkSize;
   }
   boolean dead() {
     if(hp <= 0){
@@ -94,8 +96,8 @@ class Enemy {
       return false;
     }
   }
-  void move(String dir, float amount){
-    switch(dir){
+  void move(String direction, float amount){
+    switch(direction){
       case "R":
         x += amount;
       break;
@@ -108,6 +110,9 @@ class Enemy {
       case "D":
         y += amount;
       break;
+      default:
+      hp = -1;
+      //Take away life??
     }
   }
   void display() {
@@ -129,18 +134,18 @@ class Enemy {
     noStroke();
     rect(x, y - 22, hp / maxhp * 20, 3);
     fill(0, 255, 255);
-    rect(x, y - 20, sh / maxsh * 20, 3);
+    rect(x, y - 19, sh / maxsh * 20, 3);
     distTraveled += sp;
     distLeft -= sp; //<>//
     if(distLeft < 0){
-      move(game.levelPath[progress], distLeft);
-      progress ++;
-      distLeft = 50;
-      distTraveled += distLeft;
-      if(progress >= game.levelPath.length){
-        progress = 0;
-        hp = -1;
-        //Take away life?
+      if(game.levelPath[progress] != "|"){
+        String nextDir = game.levelPath[progress + 1];
+        move(dir, distLeft);
+        distTraveled += distLeft;
+        dir = nextDir;
+        move(dir, sp);
+        distLeft = chunkSize;
+        progress ++;
       }
     }else{
       move(game.levelPath[progress], sp);
@@ -222,5 +227,4 @@ class Notif {
 
 class PREF {
   float sensitivity = 1;
-  int accuracy = 100;
 }
