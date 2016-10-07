@@ -46,10 +46,11 @@ void doWaves(){
     }else{
       if(waveP2 >= parseInt(data.waves[wave][waveP][1])){
         waveP ++;
+        waveP2 = 0;
         if(waveP >= data.waves[wave].length){
           wave ++;
           waveP = 0;
-          waveP2 = 0;
+          return;
         }
       }
       if(wave >= data.waves.length){

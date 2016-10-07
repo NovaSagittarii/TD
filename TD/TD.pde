@@ -93,7 +93,7 @@ void draw(){
           pushMatrix();
           int TowerID = (game.layout[j][i] - 5);
           float TowerR = 0;
-          for(int k = 0; k < game.enemies.size(); k ++){
+          for(int k = game.enemies.size()-1; k > -1; k --){
             Enemy enemy = game.enemies.get(k);
             if(dist(enemy.x, enemy.y, i * 50 + 25, j * 50 + 25) > (data.tower.stats.range[TowerID] / 2)){
               continue;

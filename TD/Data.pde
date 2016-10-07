@@ -25,9 +25,9 @@ class GAME {
     {0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0},
-    {0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 5, 0, 0},
+    {0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 5, 5, 5},
     {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -42,12 +42,13 @@ class STAT {
   int kills = 0;
 }
 class Enemy {
-  int maxhp, maxsh, value, def, progress, progress2;
+  int maxhp, maxsh, value, def, progress, distLeft, distTraveled;
   float x, y, hp, sh, sp, HB; //hp- hitpoints, sh-sheild, sp-speed, HB- hitbox
   String type;
   Enemy(float tx, float ty, String ttype){
     progress = 0;
-    progress2 = 0;
+    distLeft = 50;
+    distTraveled = 0;
     maxsh = 0;
     def = 0;
     x = tx;
@@ -59,6 +60,27 @@ class Enemy {
         value = 1;
         sp = 2;
         HB = 14;
+      break;
+      case "basic2":
+        maxhp = 250;
+        maxsh = 200;
+        value = 5;
+        sp = 1;
+        HB = 17;
+      break;
+      case "basic3":
+        maxhp = 200;
+        maxsh = 400;
+        value = 10;
+        sp = 1.5;
+        HB = 17;
+      break;
+      case "basic9":
+        maxhp = 2500;
+        maxsh = 5000;
+        value = 100;
+        sp = 1;
+        HB = 20;
       break;
     }
     hp = maxhp;
@@ -72,53 +94,92 @@ class Enemy {
       return false;
     }
   }
+  void move(String dir, float amount){
+    switch(dir){
+      case "R":
+        x += amount;
+      break;
+      case "U":
+        y -= amount;
+      break;
+      case "L":
+        x -= amount;
+      break;
+      case "D":
+        y += amount;
+      break;
+    }
+  }
   void display() {
     switch(type){
       case "basic":
         Nellipse(x, y, 20, 20, 8, 3, color(255, 0, 0), 2);
       break;
+      case "basic2":
+        Nellipse(x, y, 24, 24, 8, 3, color(0, 255, 255), 2);
+      break;
+      case "basic3":
+        Nellipse(x, y, 24, 24, 8, 3, color(0, 255, 0), 2);
+      break;
+      case "basic9":
+        Nellipse(x, y, 34, 34, 8, 3, color(255, 150, 0), 2);
+      break;
     }
     fill(255, 0, 0);
     noStroke();
-    rect(x, y - 20, hp / maxhp * 20, 3);
-    switch(game.levelPath[progress]){
-      case "R":
-        x += sp;
-      break;
-      case "U":
-        y -= sp;
-      break;
-      case "L":
-        x -= sp;
-      break;
-      case "D":
-        y += sp;
-      break;
-    }
-    progress2 += sp;
-    if(progress2 >= 50){
+    rect(x, y - 22, hp / maxhp * 20, 3);
+    fill(0, 255, 255);
+    rect(x, y - 20, sh / maxsh * 20, 3);
+    distTraveled += sp;
+    distLeft -= sp; //<>//
+    if(distLeft < 0){
+      move(game.levelPath[progress], distLeft);
       progress ++;
-      progress2 = 0;
+      distLeft = 50;
+      distTraveled += distLeft;
       if(progress >= game.levelPath.length){
         progress = 0;
         hp = -1;
+        //Take away life?
       }
+    }else{
+      move(game.levelPath[progress], sp);
     }
   }
   void checkCollision(){
     for(int m = 0; m < game.bullets.size(); m ++){
       Bullet bullet = game.bullets.get(m);
       if(dist(bullet.x, bullet.y, x, y) < HB){
-        hp -= bullet.dmg;
-        game.bullets.remove(m);
+        if(sh > 0){
+          sh -= bullet.dmg;
+          if(sh < 0){
+            sh = 0;
+          }
+        }else{
+          hp -= bullet.dmg;
+        }
+        bullet.pierce --;
+        if(bullet.pierce <= 0){
+          game.bullets.remove(m);
+        }
       }
     }
   }
 }
 class Bullet {
-  float x, y, a, v, dmg; //[a]ngle, [v]elocity
+  float x, y, a, v, dmg, pierce; //[a]ngle, [v]elocity
   boolean AoE;
   boolean DoT;
+  Bullet(float tx, float ty, float ta, float tv, float tdmg, boolean tAoE, boolean tDoT, int tPIR){
+    x = tx;
+    y = ty;
+    a = ta;
+    v = tv;
+    dmg = tdmg;
+    AoE = tAoE;
+    DoT = tDoT;
+    pierce = tPIR;
+  }
   Bullet(float tx, float ty, float ta, float tv, float tdmg, boolean tAoE, boolean tDoT){
     x = tx;
     y = ty;
@@ -127,6 +188,7 @@ class Bullet {
     dmg = tdmg;
     AoE = tAoE;
     DoT = tDoT;
+    pierce = 1;
   }
 }
 class Notif {
@@ -160,4 +222,5 @@ class Notif {
 
 class PREF {
   float sensitivity = 1;
+  int accuracy = 100;
 }
