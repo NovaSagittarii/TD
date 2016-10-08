@@ -3,6 +3,10 @@ import ddf.minim.*;
 Minim minim;
 AudioPlayer track1, track2, track3;
 
+void mousePressed(){
+  mp = true;
+}
+
 void setup() {
   minim = new Minim(this);
   track1 = minim.loadFile("Rocket.mp3");
@@ -21,9 +25,6 @@ void setup() {
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
   imageMode(CENTER);
-}
-void keyPressed(){
-  track1.loop();
 }
 void draw(){
   switch(game.state){
@@ -44,6 +45,7 @@ void draw(){
     break;
     case 5:
       /** GAMEPLAY */
+      loopMusic(track1);
       doWaves();
       game.camX += game.camXs;
       game.camY += game.camYs;
@@ -164,6 +166,11 @@ void draw(){
       fill(255);
       textSize(45);
       text("Build", width - 125, height - 25);
+      fill(0, 255, 0);
+      textSize(14);
+      text("$" + game.money, width - 40, height - 35);
+      fill(255, 0, 0);
+      text("HP: " + game.health, width - 40, height - 15);
       translate(game.buyX, 0);
       for(int i = 0; i < 3; i ++){//12 turrets needed
         fill(255);

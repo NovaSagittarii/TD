@@ -1,11 +1,11 @@
-int sizeX = 500, sizeY = 650;
+//int sizeX = 500, sizeY = 650;
 boolean mp = false;
 
 GAME game = new GAME();
 PREF pref = new PREF();
 
 class GAME {
-  int state = 0, buyY2 = 0;
+  int state = 0, buyY2 = 0, money = 0, health = 10;
   float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 0, buyXs = 0, buyY = 0, buySel = -1;
   //Turret ID + 5 on MapLayout to register. 2-4 are 'undefined'
   int layout[][] = {
@@ -33,7 +33,7 @@ class GAME {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
   };
   //Use || to signal end.
-  String levelPath[] = "RRRDDDRRDDDRUUUURRRRDDRDDDDDDDDDLLLLLLDDDRRRRRRRRRRRRRRRR||".split("");
+  String levelPath[] = "RRRDDDRRDDDRUUUURRRRDDRDDDDDDDDDLLLLLLDDDRRRRRRRRRRRRRR||".split("");
   ArrayList<Enemy> enemies;
   ArrayList<Notif> notifs;
   ArrayList<Bullet> bullets;
@@ -43,46 +43,26 @@ class STAT {
   int kills = 0;
 }
 class Enemy {
-  int maxhp, maxsh, value, def, progress, distLeft, distTraveled, chunkSize = 50;
+  int maxhp, maxsh, value, def, progress, distLeft, distTraveled, chunkSize, dmgValue;
   float x, y, hp, sh, sp, HB; //hp- hitpoints, sh-sheild, sp-speed, HB- hitbox
   String type, dir = game.levelPath[0];
   Enemy(float tx, float ty, String ttype){
     progress = 0;
     distTraveled = 0;
-    maxsh = 0;
-    def = 0;
     x = tx;
     y = ty;
     type = ttype;
-    switch(type){
-      case "basic":
-        maxhp = 100;
-        value = 1;
-        sp = 2;
-        HB = 14;
-      break;
-      case "basic2":
-        maxhp = 250;
-        maxsh = 200;
-        value = 5;
-        sp = 1;
-        HB = 17;
-      break;
-      case "basic3":
-        maxhp = 200;
-        maxsh = 400;
-        value = 10;
-        sp = 1.5;
-        HB = 17;
-        chunkSize = 65;
-      break;
-      case "basic9":
-        maxhp = 2500;
-        maxsh = 5000;
-        value = 100;
-        sp = 1;
-        HB = 20;
-      break;
+    for(int l = 0; l < data.enemyStats.name.length; l ++){
+      if(type == data.enemyStats.name[l]){
+        maxhp = data.enemyStats.maxhp[l];
+        maxsh = data.enemyStats.maxsh[l];
+        sp = data.enemyStats.sp[l];
+        def = data.enemyStats.def[l];
+        value = data.enemyStats.value[l];
+        HB = data.enemyStats.hitbox[l];
+        dmgValue = data.enemyStats.dmg[l];
+        chunkSize = data.enemyStats.CS[l];
+      }
     }
     hp = maxhp;
     sh = maxsh;
@@ -91,6 +71,7 @@ class Enemy {
   boolean dead() {
     if(hp <= 0){
       game.stat.kills ++;
+      game.money += value;
       return true;
     }else{
       return false;
@@ -112,12 +93,12 @@ class Enemy {
       break;
       default:
       hp = -1;
-      //Take away life??
+      game.health -= dmgValue;
     }
   }
   void display() {
     switch(type){
-      case "basic":
+      case "basic1":
         Nellipse(x, y, 20, 20, 8, 3, color(255, 0, 0), 2);
       break;
       case "basic2":

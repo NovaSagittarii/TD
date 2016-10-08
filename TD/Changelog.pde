@@ -10,7 +10,8 @@ Development Build 5 - Build Shop and Turrets
 Development Build 6 - Firing Mechanism
 Development Build 6.5 - Hitboxes, Waves
 Development Build 6.7 - Fixed Enemies from straying off path.
--todo Development Build 7 - Economy
+Development Build 7 - Economy, Health Counter
+-todo Development Build 8 - Functional Shop
 
 Music Credits stuffs (based on \Data folder)
 
