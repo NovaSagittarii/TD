@@ -32,7 +32,7 @@ class DATA {
     int maxsh[] = {0, 200, 400, 500};
     float sp[] = {2, 1, 1.5, 1};
     int def[] = {0, 0, 0, 0};
-    int value[] = {1, 2, 4, 50};
+    int value[] = {5, 10, 15, 500};
     int hitbox[] = {14, 17, 17, 24};
     int dmg[] = {1, 1, 1, 10};
     int CS[] = {50, 50, 65, 50};

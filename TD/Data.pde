@@ -5,8 +5,8 @@ GAME game = new GAME();
 PREF pref = new PREF();
 
 class GAME {
-  int state = 0, buyY2 = 0, money = 0, health = 10;
-  float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 0, buyXs = 0, buyY = 0, buySel = -1;
+  int state = 0, buyY2 = 0, money = 0;
+  float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 0, buyXs = 0, buyY = 0, buySel = -1, health = 10;
   //Turret ID + 5 on MapLayout to register. 2-4 are 'undefined'
   int layout[][] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -69,9 +69,13 @@ class Enemy {
     distLeft = chunkSize;
   }
   boolean dead() {
+    if(hp == -420.1337){
+      return true;
+    }
     if(hp <= 0){
       game.stat.kills ++;
       game.money += value;
+      game.notifs.add(new Notif((-game.camX + width - 40), (-game.camY + height - 35 - game.buyY), 5, "+$" + value, 0, 255, 0, 0));
       return true;
     }else{
       return false;
@@ -92,8 +96,9 @@ class Enemy {
         y += amount;
       break;
       default:
-      hp = -1;
+      hp = -420.1337;
       game.health -= dmgValue;
+      game.notifs.add(new Notif(width - 40, (height - 15 - game.buyY), 5, "-" + dmgValue + " HP", 255, 0, 0, -100, 20));
     }
   }
   void display() {
@@ -119,7 +124,7 @@ class Enemy {
     distTraveled += sp;
     distLeft -= sp; //<>//
     if(distLeft < 0){
-      if(game.levelPath[progress] != "|"){
+      if(dir != "|"){
         String nextDir = game.levelPath[progress + 1];
         move(dir, distLeft);
         distTraveled += distLeft;
@@ -141,8 +146,10 @@ class Enemy {
           if(sh < 0){
             sh = 0;
           }
+          game.notifs.add(new Notif(bullet.x, bullet.y, 5, "-" + bullet.dmg, 0, 255, 255, 0));
         }else{
           hp -= bullet.dmg;
+          game.notifs.add(new Notif(bullet.x, bullet.y, 5, "-" + bullet.dmg, 255, 0, 0, 0));
         }
         bullet.pierce --;
         if(bullet.pierce <= 0){
@@ -178,18 +185,31 @@ class Bullet {
   }
 }
 class Notif {
-  int tl, s, r, g, b;
+  int tl, s, r, g, b, a, ts = 12;
   float x, y;
   String txt;
-  Notif(float Tx, float Ty, int Ts, String Ttxt, int Tr, int Tg, int Tb){
+  Notif(float Tx, float Ty, int Ts, String Ttxt, int Tr, int Tg, int Tb, int Ta){
     tl = 250;
     s = Ts;
     r = Tr;
     g = Tg;
     b = Tb;
+    a = Ta;
     x = Tx;
     y = Ty;
     txt = Ttxt;
+  }
+  Notif(float Tx, float Ty, int Ts, String Ttxt, int Tr, int Tg, int Tb, int Ta, int Tts){
+    tl = 250;
+    s = Ts;
+    r = Tr;
+    g = Tg;
+    b = Tb;
+    a = Ta;
+    x = Tx;
+    y = Ty;
+    txt = Ttxt;
+    ts = Tts;
   }
   boolean requestRemoval() {
     if(tl < 0){
@@ -199,7 +219,8 @@ class Notif {
     }
   }
   void display() {
-    fill(r, g, b, tl);
+    fill(r, g, b, tl - a);
+    textSize(ts);
     text(txt, x, y);
     y += 2 - tl/50;
     tl -= 5;

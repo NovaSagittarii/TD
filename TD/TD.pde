@@ -26,6 +26,8 @@ void setup() {
   rectMode(CENTER);
   imageMode(CENTER);
 }
+float[] waves = new float[135];
+float last = 0;
 void draw(){
   switch(game.state){
     case 0:
@@ -112,9 +114,12 @@ void draw(){
           fill(255);
           //image(data.tower.baseP[TowerID], 25, 25);
           ellipse(25, 25, 30, 30);
+          fill(255);
           translate(25, 25);
           rotate(TowerR + PI/2);
           rect(0, -10, 10, 25);
+          fill(0, 100);
+          arc(0, 0, 20, 20, 0, (round(noise(i*3, j*6) * 69 + frameCount) / data.tower.stats.reload[TowerID]) * PI % PI*2);
           popMatrix();
           if((round(noise(i*3, j*6) * 69 + frameCount) % data.tower.stats.reload[TowerID]) == 0 && TowerR != 0){
             game.bullets.add(new Bullet(i * 50 + 25, j * 50 + 25, TowerR, 7, data.tower.stats.damage[TowerID], false, false));
@@ -129,15 +134,7 @@ void draw(){
           game.enemies.remove(i);
         }
       }
-      textSize(12);
-      for(int i = game.notifs.size() - 1; i >= 0; i --){
-        Notif notif = game.notifs.get(i);
-        notif.display();
-        if(notif.requestRemoval()){
-          game.notifs.remove(i);
-        }
-      }
-      
+      pushMatrix();
       resetMatrix();
       translate(0, -game.buyY);
       fill(150, 100 + game.buyY/2);
@@ -146,6 +143,7 @@ void draw(){
         if(mp){
           if(game.buyY > 50){
             game.buyY2 = 0;
+            game.buySel = -1;
           }else{
             game.buyY2 = 100;
           }
@@ -170,7 +168,7 @@ void draw(){
       textSize(14);
       text("$" + game.money, width - 40, height - 35);
       fill(255, 0, 0);
-      text("HP: " + game.health, width - 40, height - 15);
+      text("HP: " + round(game.health), width - 40, height - 15);
       translate(game.buyX, 0);
       for(int i = 0; i < 3; i ++){//12 turrets needed
         fill(255);
@@ -181,6 +179,9 @@ void draw(){
           stroke(255, 50);
           if(game.buySel == i){
             stroke(255, 100);
+            if(mp){
+              //build whatever
+            }
           }
           strokeWeight(10);
           rect(i * 100, height + 50, 80, 80);
@@ -205,6 +206,14 @@ void draw(){
       }
       if(game.buyY2 == 100 && mouseY > (height - 100) && mousePressed){
         game.buyXs += (pmouseX - mouseX) / -5;
+      }
+      popMatrix();
+      for(int i = game.notifs.size() - 1; i >= 0; i --){
+        Notif notif = game.notifs.get(i);
+        notif.display();
+        if(notif.requestRemoval()){
+          game.notifs.remove(i);
+        }
       }
     break;
   }

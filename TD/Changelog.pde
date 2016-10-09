@@ -11,6 +11,7 @@ Development Build 6 - Firing Mechanism
 Development Build 6.5 - Hitboxes, Waves
 Development Build 6.7 - Fixed Enemies from straying off path.
 Development Build 7 - Economy, Health Counter
+Development Build 7.3 - Floaty Numbers!
 -todo Development Build 8 - Functional Shop
 
 Music Credits stuffs (based on \Data folder)
