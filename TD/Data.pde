@@ -5,8 +5,9 @@ GAME game = new GAME();
 PREF pref = new PREF();
 
 class GAME {
-  int state = 0, buyY2 = 0, money = 0;
-  float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 0, buyXs = 0, buyY = 0, buySel = -1, health = 10;
+  //Give myself too much money because i'm awesome, and testing purposes. :3
+  int state = 0, buyY2 = 0, money = 9999999, health = 10;
+  float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 100, buyXs = 0, buyY = 0, buySel = -1;
   //Turret ID + 5 on MapLayout to register. 2-4 are 'undefined'
   int layout[][] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -43,8 +44,8 @@ class STAT {
   int kills = 0;
 }
 class Enemy {
-  int maxhp, maxsh, value, def, progress, distLeft, distTraveled, chunkSize, dmgValue;
-  float x, y, hp, sh, sp, HB; //hp- hitpoints, sh-sheild, sp-speed, HB- hitbox
+  int maxhp, maxsh, value, progress, dmgValue;
+  float x, y, hp, sh, sp, HB, distLeft, distTraveled, chunkSize = 50, def; //hp- hitpoints, sh-sheild, sp-speed, HB- hitbox
   String type, dir = game.levelPath[0];
   Enemy(float tx, float ty, String ttype){
     progress = 0;
@@ -57,11 +58,10 @@ class Enemy {
         maxhp = data.enemyStats.maxhp[l];
         maxsh = data.enemyStats.maxsh[l];
         sp = data.enemyStats.sp[l];
-        def = data.enemyStats.def[l];
+        def = (100 - data.enemyStats.def[l]) / 100;
         value = data.enemyStats.value[l];
         HB = data.enemyStats.hitbox[l];
         dmgValue = data.enemyStats.dmg[l];
-        chunkSize = data.enemyStats.CS[l];
       }
     }
     hp = maxhp;
@@ -70,6 +70,7 @@ class Enemy {
   }
   boolean dead() {
     if(hp == -420.1337){
+      game.notifs.add(new Notif((-game.camX + width - 40), (-game.camY + height - 15 - game.buyY), 5, "-" + dmgValue + " HP", 255, 0, 0, -100, 20));
       return true;
     }
     if(hp <= 0){
@@ -98,7 +99,6 @@ class Enemy {
       default:
       hp = -420.1337;
       game.health -= dmgValue;
-      game.notifs.add(new Notif(width - 40, (height - 15 - game.buyY), 5, "-" + dmgValue + " HP", 255, 0, 0, -100, 20));
     }
   }
   void display() {
@@ -114,6 +114,15 @@ class Enemy {
       break;
       case "basic9":
         Nellipse(x, y, 34, 34, 8, 3, color(255, 150, 0), 2);
+      break;
+      case "heavy1":
+        Nrect(x, y, 20, 20, 8, 3, color(255, 0, 0), 2);
+      break;
+      case "heavy2":
+        Nrect(x, y, 24, 24, 8, 3, color(0, 255, 255), 2);
+      break;
+      case "heavy3":
+        Nrect(x, y, 26, 26, 8, 3, color(0, 255, 0), 2);
       break;
     }
     fill(255, 0, 0);
@@ -141,15 +150,16 @@ class Enemy {
     for(int m = 0; m < game.bullets.size(); m ++){
       Bullet bullet = game.bullets.get(m);
       if(dist(bullet.x, bullet.y, x, y) < HB){
+        float adjustedDmg = round(bullet.dmg * def * 10) / 10;
         if(sh > 0){
-          sh -= bullet.dmg;
+          sh -= adjustedDmg;
           if(sh < 0){
             sh = 0;
           }
-          game.notifs.add(new Notif(bullet.x, bullet.y, 5, "-" + bullet.dmg, 0, 255, 255, 0));
+          game.notifs.add(new Notif(bullet.x, bullet.y, 5, ("-" + adjustedDmg), 0, 255, 255, 0));
         }else{
-          hp -= bullet.dmg;
-          game.notifs.add(new Notif(bullet.x, bullet.y, 5, "-" + bullet.dmg, 255, 0, 0, 0));
+          hp -= adjustedDmg;
+          game.notifs.add(new Notif(bullet.x, bullet.y, 5, ("-" + adjustedDmg), 255, 0, 0, 0));
         }
         bullet.pierce --;
         if(bullet.pierce <= 0){
@@ -160,6 +170,7 @@ class Enemy {
   }
 }
 class Bullet {
+  int ID; //bulletID
   float x, y, a, v, dmg, pierce; //[a]ngle, [v]elocity
   boolean AoE;
   boolean DoT;

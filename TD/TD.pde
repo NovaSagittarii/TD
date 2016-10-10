@@ -138,7 +138,9 @@ void draw(){
       resetMatrix();
       translate(0, -game.buyY);
       fill(150, 100 + game.buyY/2);
-      if((abs(mouseY - ((height-25) - game.buyY)) < 25) && ((abs(mouseX - 425) < 75 || mouseX > (width-350)-mouseY))){
+      boolean ONBUILD = false;
+      if((abs(mouseY - ((height-25) - game.buyY)) < 30) && ((abs(mouseX - (width - 100)) < 100))){
+        ONBUILD = true;
         fill(175, 100 + game.buyY/2);
         if(mp){
           if(game.buyY > 50){
@@ -171,17 +173,46 @@ void draw(){
       text("HP: " + round(game.health), width - 40, height - 15);
       translate(game.buyX, 0);
       for(int i = 0; i < 3; i ++){//12 turrets needed
+        boolean AFFORDABLE = false;
+        if(game.money >= data.tower.stats.cost[i]){
+          fill(0, 255, 0);
+          AFFORDABLE = true;
+        }else{
+          fill(255, 0, 0);
+        }
+        text("$" + data.tower.stats.cost[i], i * 100, height + 85);
         fill(255);
         textSize(data.tower.txtSize[i]);
-        text(data.tower.name[i], i * 100, height + 80);
+        text(data.tower.name[i], i * 100, height + 70);
         if(abs(mouseX - i * 100 - game.buyX) < 40 && mouseY > (height - 100) || game.buySel == i){
           fill(255, 50);
           stroke(255, 50);
           if(game.buySel == i){
-            stroke(255, 100);
-            if(mp){
-              //build whatever
+            int K = round((mouseX-game.camX-25)/50);
+            int L = round((mouseY-game.camY-25)/50);
+            pushStyle();
+            pushMatrix();
+            resetMatrix();
+            if(L >= 0 && K >= 0 && L < game.layout.length && K < game.layout[0].length && !ONBUILD){
+              if(game.layout[L][K] != 0){
+                fill(255, 0, 0, 100);
+              }else{
+                fill(255, 150);
+                if(mp && mouseY < (height - 100) && AFFORDABLE){
+                  game.layout[L][K] = i+5;
+                  game.money -= data.tower.stats.cost[i];
+                  game.notifs.add(new Notif((-game.camX + width - 40), (-game.camY + height - 35 - game.buyY), 5, "-$" + data.tower.stats.cost[i], 255, 255, 0, 0, 15));
+                }
+              }
             }
+            rect(K*50+25+game.camX, L*50+25+game.camY, 50, 50);
+            fill(255, 50);
+            strokeWeight(4);
+            stroke(255, 100);
+            ellipse(K*50+25+game.camX, L*50+25+game.camY, data.tower.stats.range[i], data.tower.stats.range[i]);
+            popMatrix();
+            popStyle();
+            stroke(255, 100);
           }
           strokeWeight(10);
           rect(i * 100, height + 50, 80, 80);
@@ -189,7 +220,9 @@ void draw(){
             if(game.buySel == i){
               game.buySel = -1;
             }else{
-              game.buySel = i;
+              if(AFFORDABLE){
+                game.buySel = i;
+              }
             }
           }
         }

@@ -5,7 +5,7 @@ void mouseDragged(){
   if(game.state != 5){
     return;
   }
-  if((mouseY < (height - 100) && game.buyY2 != 100) || game.buyY2 < 100){
+  if((mouseY < (height - game.buyY))){
     game.camXs += (mouseX - pmouseX) / 5 * pref.sensitivity;
     game.camYs += (mouseY - pmouseY) / 5 * pref.sensitivity;
   }
