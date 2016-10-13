@@ -15,18 +15,21 @@ class DATA {
   TOWER tower = new TOWER();
   ESTAT enemyStats = new ESTAT();
   class TOWER {
-    String name[] = {"Basic Turret", "Laser Turret", "Twin Turret"};
-    int txtSize[] = {15, 15, 15};
+    String name[] = {"Basic Turret", "Twin Turret", "Gatling Turret", "Sniper Turret"};
+    int txtSize[] = {15, 15, 13, 13};
     PImage baseP[] = {loadImage("")};
     PImage barlP[] = {loadImage("")};
     STATS stats = new STATS();
     class STATS {
-      int cost[] = {150, 250, 400};
-      int range[] = {400, 750, 350};
-      float reload[] = {70 /*should be 70*/, 2 /*should be 10*/, 35};
-      float damage[] = {20, 1 /*should be 5*/, 20};
-      boolean AoE[] = {false, false, false};
-      boolean DoT[] = {false, false, false};
+      int cost[] = {100, 180, 400, 950};
+      int range[] = {400, 350, 450, 800};
+      int pierce[] = {1, 1, 3, 5};
+      float accuracy[] = {0, 0, 15, 0}; //Degrees of offset
+      float reload[] = {70 , 35, 7, 400};
+      float damage[] = {20, 20, 2, 100};
+      float bspeed[] = {7, 7, 10, 12};
+      boolean AoE[] = {false, false, false, false};
+      boolean DoT[] = {false, false, false, false};
     }
   }
   class ESTAT {

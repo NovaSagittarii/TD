@@ -122,7 +122,7 @@ void draw(){
           arc(0, 0, 20, 20, 0, (round(noise(i*3, j*6) * 69 + frameCount) / data.tower.stats.reload[TowerID]) * PI % PI*2);
           popMatrix();
           if((round(noise(i*3, j*6) * 69 + frameCount) % data.tower.stats.reload[TowerID]) == 0 && TowerR != 0){
-            game.bullets.add(new Bullet(i * 50 + 25, j * 50 + 25, TowerR, 7, data.tower.stats.damage[TowerID], false, false));
+            game.bullets.add(new Bullet(i * 50 + 25, j * 50 + 25, TowerR + radians(random(-data.tower.stats.accuracy[TowerID], data.tower.stats.accuracy[TowerID])), data.tower.stats.bspeed[TowerID], data.tower.stats.damage[TowerID], false, false, data.tower.stats.pierce[TowerID]));
           }
         }
       }
@@ -172,19 +172,18 @@ void draw(){
       fill(255, 0, 0);
       text("HP: " + round(game.health), width - 40, height - 15);
       translate(game.buyX, 0);
-      for(int i = 0; i < 3; i ++){//12 turrets needed
+      for(int i = 0; i < 4; i ++){//12 turrets needed
         boolean AFFORDABLE = false;
         if(game.money >= data.tower.stats.cost[i]){
           fill(0, 255, 0);
           AFFORDABLE = true;
         }else{
           fill(255, 0, 0);
-        }
         text("$" + data.tower.stats.cost[i], i * 100, height + 85);
         fill(255);
         textSize(data.tower.txtSize[i]);
         text(data.tower.name[i], i * 100, height + 70);
-        if(abs(mouseX - i * 100 - game.buyX) < 40 && mouseY > (height - 100) || game.buySel == i){
+        if(abs(mouseX - i * 100 - game.buyX) < 40 && mouseY > (height - game.buyY) || game.buySel == i){
           fill(255, 50);
           stroke(255, 50);
           if(game.buySel == i){

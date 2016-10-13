@@ -150,16 +150,22 @@ class Enemy {
     for(int m = 0; m < game.bullets.size(); m ++){
       Bullet bullet = game.bullets.get(m);
       if(dist(bullet.x, bullet.y, x, y) < HB){
-        float adjustedDmg = round(bullet.dmg * def * 10) / 10;
+        float adjustedDmg = bullet.dmg * def;
+        String shownDmg;
+        if(adjustedDmg == round(adjustedDmg)){
+          shownDmg = "-" + round(adjustedDmg);
+        }else{
+          shownDmg = "-" + floor(adjustedDmg) + "." + floor((adjustedDmg - floor(adjustedDmg)) * 10);
+        }
         if(sh > 0){
           sh -= adjustedDmg;
           if(sh < 0){
             sh = 0;
           }
-          game.notifs.add(new Notif(bullet.x, bullet.y, 5, ("-" + adjustedDmg), 0, 255, 255, 0));
+          game.notifs.add(new Notif(bullet.x, bullet.y, 5, shownDmg, 0, 255, 255, 0, round(7+constrain(adjustedDmg/5, 5, 20))));
         }else{
           hp -= adjustedDmg;
-          game.notifs.add(new Notif(bullet.x, bullet.y, 5, ("-" + adjustedDmg), 255, 0, 0, 0));
+          game.notifs.add(new Notif(bullet.x, bullet.y, 5, shownDmg, 255, 0, 0, 0, round(7+constrain(adjustedDmg/5, 5, 20))));
         }
         bullet.pierce --;
         if(bullet.pierce <= 0){
