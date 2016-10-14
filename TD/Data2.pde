@@ -25,9 +25,9 @@ class DATA {
       int range[] = {400, 350, 450, 800};
       int pierce[] = {1, 1, 3, 5};
       float accuracy[] = {0, 0, 15, 0}; //Degrees of offset
-      float reload[] = {70 , 35, 7, 400};
-      float damage[] = {20, 20, 2, 100};
-      float bspeed[] = {7, 7, 10, 12};
+      float reload[] = {1 , 35, 7, 400};
+      float damage[] = {200, 20, 2, 100};
+      float bspeed[] = {0.7, 7, 10, 12};
       boolean AoE[] = {false, false, false, false};
       boolean DoT[] = {false, false, false, false};
     }

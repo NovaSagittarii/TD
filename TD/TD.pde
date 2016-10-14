@@ -2,6 +2,7 @@ import ddf.minim.*;
 
 Minim minim;
 AudioPlayer track1, track2, track3;
+boolean mp = false;
 
 void mousePressed(){
   mp = true;
@@ -179,6 +180,7 @@ void draw(){
           AFFORDABLE = true;
         }else{
           fill(255, 0, 0);
+        }//wowoowowoowoowowoowow ;-;
         text("$" + data.tower.stats.cost[i], i * 100, height + 85);
         fill(255);
         textSize(data.tower.txtSize[i]);

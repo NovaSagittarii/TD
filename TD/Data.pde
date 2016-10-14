@@ -1,5 +1,4 @@
 //int sizeX = 500, sizeY = 650;
-boolean mp = false;
 
 GAME game = new GAME();
 PREF pref = new PREF();
