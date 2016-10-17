@@ -52,6 +52,8 @@ void doWaves(){
         waveP ++;
         waveP2 = 0;
         if(waveP >= data.waves[wave].length){
+          game.money += parseInt(data.waves[wave][0][1]);
+          game.notifs.add(new Notif((-game.camX + width - 40), (-game.camY + height - 35 - game.buyY), 5, "+$" + data.waves[wave][0][1], 0, 255, 255, -100, 25, 3));
           wave ++;
           waveP = 0;
           return;

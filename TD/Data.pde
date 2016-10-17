@@ -5,7 +5,7 @@ PREF pref = new PREF();
 
 class GAME {
   //Give myself too much money because i'm awesome, and testing purposes. :3
-  int state = 0, buyY2 = 0, money = 500, health = 10;
+  int state = 0, buyY2 = 0, money = 5000, health = 10;
   float camX = 0, camY = 0, camXs = 0, camYs = 0, buyX = 100, buyXs = 0, buyY = 0, buySel = -1;
   //Turret ID + 5 on MapLayout to register. 2-4 are 'undefined'
   int layout[][] = {
@@ -181,7 +181,7 @@ class Enemy {
   }
 }
 class Bullet {
-  int ID; //bulletID
+  int ID, TL; //bulletID
   float x, y, a, v, dmg, pierce; //[a]ngle, [v]elocity
   boolean AoE;
   boolean DoT;
@@ -194,6 +194,7 @@ class Bullet {
     AoE = tAoE;
     DoT = tDoT;
     pierce = tPIR;
+    TL = 4000;
   }
   Bullet(float tx, float ty, float ta, float tv, float tdmg, boolean tAoE, boolean tDoT){
     x = tx;
@@ -204,14 +205,14 @@ class Bullet {
     AoE = tAoE;
     DoT = tDoT;
     pierce = 1;
+    TL = 4000;
   }
 }
 class Notif {
-  int tl, s, r, g, b, a, ts = 12;
+  int tl = 250, s, r, g, b, a, ts = 12, sp = 5;
   float x, y;
   String txt;
   Notif(float Tx, float Ty, int Ts, String Ttxt, int Tr, int Tg, int Tb, int Ta){
-    tl = 250;
     s = Ts;
     r = Tr;
     g = Tg;
@@ -222,7 +223,18 @@ class Notif {
     txt = Ttxt;
   }
   Notif(float Tx, float Ty, int Ts, String Ttxt, int Tr, int Tg, int Tb, int Ta, int Tts){
-    tl = 250;
+    s = Ts;
+    r = Tr;
+    g = Tg;
+    b = Tb;
+    a = Ta;
+    x = Tx;
+    y = Ty;
+    txt = Ttxt;
+    ts = Tts;
+  }
+  Notif(float Tx, float Ty, int Ts, String Ttxt, int Tr, int Tg, int Tb, int Ta, int Tts, int Tsp){
+    sp = Tsp;
     s = Ts;
     r = Tr;
     g = Tg;
@@ -244,8 +256,8 @@ class Notif {
     fill(r, g, b, tl - a);
     textSize(ts);
     text(txt, x, y);
-    y += 2 - tl/50;
-    tl -= 5;
+    y += 2 - tl/(sp*10);
+    tl -= sp;
   }
 }
 

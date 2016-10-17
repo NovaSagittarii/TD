@@ -84,6 +84,10 @@ void draw(){
         ellipse(bullet.x, bullet.y, 10, 10);
         bullet.x += cos(bullet.a) * bullet.v;
         bullet.y += sin(bullet.a) * bullet.v;
+        bullet.TL --;
+        if(bullet.TL < 0){
+          game.bullets.remove(i);
+        }
       }
       strokeWeight(2);
       for(int i = 0; i < game.layout[0].length; i ++){
