@@ -82,51 +82,53 @@ class Enemy {
     }
   }
   void move(String direction, float amount){
-    switch(direction){
-      case "R":
+    //Oddly .hashCode() makes it work... T.T
+    if(direction.hashCode() == "R".hashCode()){
         x += amount;
-      break;
-      case "U":
+    }else if(direction.hashCode() == "U".hashCode()){
         y -= amount;
-      break;
-      case "L":
+    }else if(direction.hashCode() == "L".hashCode()){
         x -= amount;
-      break;
-      case "D":
+    }else if(direction.hashCode() == "D".hashCode()){
         y += amount;
-      break;
-      default:
+    }else{
       hp = -420.1337;
       game.health -= dmgValue;
     }
   }
   void display() {
-    switch(type){
-      case "TINY": 
+    int ENEMYID = 0;
+    for(int i = 0; i < data.enemyStats.name.length; i ++){
+      if(data.enemyStats.name[i] == type){
+        ENEMYID = i;
+      }
+    }
+    switch(ENEMYID){
+      case 0:
         Nellipse(x, y, 10, 10, 6, 3, color(255, 150, 100), 2);
       break;
-      case "start":
+      case 1:
         Nellipse(x, y, 16, 16, 7, 3, color(255, 0, 0), 2);
       break;
-      case "basic1":
+      case 2:
         Nellipse(x, y, 20, 20, 8, 3, color(255, 0, 0), 2);
       break;
-      case "basic2":
+      case 3:
         Nellipse(x, y, 24, 24, 8, 3, color(0, 255, 255), 2);
       break;
-      case "basic3":
+      case 4:
         Nellipse(x, y, 24, 24, 8, 3, color(0, 255, 0), 2);
       break;
-      case "basic9":
+      case 5:
         Nellipse(x, y, 34, 34, 8, 3, color(255, 150, 0), 2);
       break;
-      case "heavy1":
+      case 6:
         Nrect(x, y, 20, 20, 8, 3, color(255, 0, 0), 2);
       break;
-      case "heavy2":
+      case 7:
         Nrect(x, y, 24, 24, 8, 3, color(0, 255, 255), 2);
       break;
-      case "heavy3":
+      case 8:
         Nrect(x, y, 26, 26, 8, 3, color(0, 255, 0), 2);
       break;
     }
@@ -179,6 +181,11 @@ class Enemy {
       }
     }
   }
+}
+class Tower {
+  int ID, x, y, r; //TowerID, [r]eload
+  PImage base, barrel;
+  
 }
 class Bullet {
   int ID, TL; //bulletID
@@ -263,4 +270,5 @@ class Notif {
 
 class PREF {
   float sensitivity = 1;
+  boolean mute = true;
 }

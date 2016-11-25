@@ -19,13 +19,14 @@ void setup() {
   game.bullets = new ArrayList<Bullet>();
   size(700, 400);
   //fullScreen();
-  surface.setResizable(true);
-  surface.setTitle("Work-In-Progress TD");
+  //surface.setResizable(true);
+  //surface.setTitle("Work-In-Progress TD");
   //surface.setIcon(loadImage("icon.png"));
   textFont(loadFont("Ubuntu-48.vlw"), 48);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
   imageMode(CENTER);
+  track1.loop();
 }
 float[] waves = new float[135];
 float last = 0;
@@ -48,7 +49,6 @@ void draw(){
     break;
     case 5:
       /** GAMEPLAY */
-      loopMusic(track1);
       doWaves();
       game.camX += game.camXs;
       game.camY += game.camYs;
@@ -62,19 +62,14 @@ void draw(){
       for(int i = 1; i < game.levelPath.length; i ++){
         fill(80);
         rect(xloc, yloc, 50, 50);
-        switch(game.levelPath[i]){
-          case "L":
+        if(game.levelPath[i].hashCode() == "L".hashCode()){
             xloc -= 50;
-          break;
-          case "U":
+        }else if(game.levelPath[i].hashCode() == "U".hashCode()){
             yloc -= 50;
-          break;
-          case "R":
+        }else if(game.levelPath[i].hashCode() == "R".hashCode()){
             xloc += 50;
-          break;
-          case "D":
+        }else if(game.levelPath[i].hashCode() == "D".hashCode()){
             yloc += 50;
-          break;
         }
       }
       fill(255);
@@ -192,6 +187,21 @@ void draw(){
         if(abs(mouseX - i * 100 - game.buyX) < 40 && mouseY > (height - game.buyY) || game.buySel == i){
           fill(255, 50);
           stroke(255, 50);
+          if(abs(mouseX - i * 100 - game.buyX) < 40 && mouseY > (height - game.buyY)){
+            int box_L = 120;
+            int box_W = 100;
+            float dmgpower = data.tower.stats.pierce[i] * (1 / data.tower.stats.reload[i]) * data.tower.stats.damage[i] * 1000;
+            pushMatrix();
+            pushStyle();
+            //translate(mouseX-box_L/2, mouseY+box_W/2+50);
+            translate(i * 100, width - 350);
+            rect(0, 0, box_L, box_W);
+            fill(255, 255, 255);
+            textSize(12);
+            text(data.tower.name[i] + "\n\n" + data.tower.desc[i] + "\n\nDPS ≈ " + round(dmgpower / 60), 0, 0, box_L, box_W);
+            popMatrix();
+            popStyle();
+          }
           if(game.buySel == i){
             int K = round((mouseX-game.camX-25)/50);
             int L = round((mouseY-game.camY-25)/50);

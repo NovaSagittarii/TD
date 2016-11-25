@@ -1,6 +1,3 @@
-void keyPressed(){
-  track1.loop();
-}
 void mouseDragged(){
   if(game.state != 5){
     return;
@@ -8,11 +5,6 @@ void mouseDragged(){
   if((mouseY < (height - game.buyY))){
     game.camXs += (mouseX - pmouseX) / 5 * pref.sensitivity;
     game.camYs += (mouseY - pmouseY) / 5 * pref.sensitivity;
-  }
-}
-void loopMusic(AudioPlayer music){
-  if(!music.isPlaying()){
-    music.loop();
   }
 }
 void Nellipse(float x, float y, float w, float h, int size, float intensity, int colour, int thickness){

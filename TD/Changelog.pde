@@ -13,6 +13,7 @@ Development Build 6.7 - Fixed Enemies from straying off path.
 Development Build 7 - Economy, Health Counter
 Development Build 7.3 - Floaty Numbers!
 Development Build 8 - Functional Shop
+Development Build 8.5 - Tower Descriptions
 -todo Development Build 9 - Tower Images, Tower CLASS
 
 Music Credits stuffs (based on \Data folder)
